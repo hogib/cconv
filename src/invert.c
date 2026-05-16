@@ -1,4 +1,7 @@
-#define INVERT
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image.h"
+#include "stb_image_write.h"
 #include "invert.h"
 static void invert_rgba(uint8_t *pixels, int w, int h) {
   // pixels is w*h*4 bytes, RGBA 8-bit

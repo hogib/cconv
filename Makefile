@@ -11,7 +11,7 @@ BUILD_DIR = build
 BIN_DIR = bin
 
 # Target Executable Name
-TARGET = $(BIN_DIR)/convlib
+TARGET = $(BIN_DIR)/cconv
 
 # Use wildcard to find all .c files in the src directory
 SRCS = $(wildcard $(SRC_DIR)/*.c)
