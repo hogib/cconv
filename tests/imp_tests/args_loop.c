@@ -1,6 +1,6 @@
+#include "args_loop.h"
 #include <stdio.h>
 #include <unistd.h>
-
 int get_args(int argc, char *argv[]) {
   int opt;
   while ((opt = getopt(argc, argv, "h")) != -1) {
@@ -19,8 +19,4 @@ int get_args(int argc, char *argv[]) {
   return 1;
 }
 
-int main(int argc, char *argv[]) {
-  get_args(argc, argv);
-  printf("hi\n");
-  return 0;
-}
+
