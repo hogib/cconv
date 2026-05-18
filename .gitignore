@@ -57,4 +57,4 @@ dkms.conf
 # bin directory and build artifacts
 bin/
 build/
-test/imp_tests/bin
+tests/imp_tests/bin
