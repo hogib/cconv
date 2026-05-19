@@ -1,5 +1,5 @@
 # Compiler and Flags
-CC = gcc
+CC = clang
 # The -I flag tells the compiler to look in the 'include' directory for header files
 # also don't forget to link with math
 CFLAGS = -g -I$(INC_DIR) -lm
