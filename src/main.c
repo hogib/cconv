@@ -11,6 +11,6 @@ int main(int argc, char **argv) {
   const char *in_path = argv[1];
   const char *out_path = argv[2];
 
-  invert_rgba(in_path, out_path); // writes png
+  gayscale_rgba(in_path, out_path); // writes png
 
 }
