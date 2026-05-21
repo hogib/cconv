@@ -10,8 +10,7 @@
 /* constructor for image. must then be destroyed*/
 Image load_img(const char *inpath) {
   Image img = {0};
-  img.data =
-      stbi_load(inpath, &img.w, &img.h, &img.channels_in_file, 4);
+  img.data = stbi_load(inpath, &img.w, &img.h, &img.channels_in_file, 4);
   return img;
 }
 
@@ -25,39 +24,24 @@ static void destroy_img(Image *img) {
   }
 }
 
+/* TODO: Make load_img handle initializing image with h, w, channles */ 
+Image img_invert_rgba(const Image *in_img) {
+  Image out_img = {0}; /* TODO: factor out init */
+  size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
+  out_img.h = in_img->h;
+  out_img.w = in_img->w;
+  out_img.channels_in_file = 4;
+  out_img.data = malloc(size_pixels * 4);
 
-int invert_rgba(const char *inpath, const char *outpath) {
-  Image img = load_img(inpath);
-
-  if (!img.data) {
-    fprintf(stderr, "stbi_load failed: %s\n", stbi_failure_reason());
-    return 2;
+  for (size_t i = 0; i < size_pixels * 4u; i += 4) {
+    out_img.data[i + 0] = 255u - in_img->data[i + 0]; // R
+    out_img.data[i + 1] = 255u - in_img->data[i + 1]; // G
+    out_img.data[i + 2] = 255u - in_img->data[i + 2]; // B
+    out_img.data[i + 3] = in_img->data[i + 3];        // copy alfa channel over
   }
 
-  size_t n = (size_t)img.w * (size_t)img.h * 4u;
-  for (size_t i = 0; i < n; i += 4) {
-    img.data[i + 0] = 255u - img.data[i + 0]; // R
-    img.data[i + 1] = 255u - img.data[i + 1]; // G
-    img.data[i + 2] =
-        255u - img.data[i + 2]; // B
-                                // there's supposed to be an alfa
-                                // channel here leave it alone pls!
-  }
-
-  int stride_in_bytes = img.w * 4;
-
-  if (!stbi_write_png(outpath, img.w, img.h, 4, img.data, stride_in_bytes)) {
-    fprintf(stderr, "stbi_write_png failed: %s\n", outpath);
-    destroy_img(&img);
-    return 1;
-  }
-
-  fprintf(stderr, "Wrote %s\n", outpath);
-  destroy_img(&img);
-  return 0;
+  return out_img;
 }
-
-
 
 /* TODO: Fix function.
 
@@ -69,6 +53,7 @@ int invert_rgba(const char *inpath, const char *outpath) {
 //
 //
 
+/* TODO: clean up and error handeling */
 Image img_grayscale(const Image *in_img) {
   Image out_img = {0};
   size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
@@ -91,7 +76,7 @@ Image img_grayscale(const Image *in_img) {
 int write_img(Image *img, const char *outpath) {
   if (!stbi_write_png(outpath, img->w, img->h, img->channels_in_file, img->data,
                       (img->w * img->channels_in_file))) {
-    fprintf(stderr, "Image write failed: %s\n", stbi_failure_reason());
+    fprintf(stdout, "Image write failed: %s\n", stbi_failure_reason());
     destroy_img(img);
     return 1;
   }

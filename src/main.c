@@ -12,6 +12,6 @@ int main(int argc, char **argv) {
   const char *out_path = argv[2];
 
   Image img = load_img(in_path);
-  Image gray_img = img_grayscale(&img);
+  Image gray_img = img_invert_rgba(&img);
   write_img(&gray_img, out_path);
 }
