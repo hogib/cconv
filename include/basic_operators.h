@@ -17,4 +17,5 @@ Image img_invert_rgba(const Image *in_img);
 int rgba_binary(const char *inpath, const char *outpath);
 Image img_grayscale(const Image *in_img);
 int write_img(Image *img, const char *outpath);
+void destroy_img(Image *img);
 #endif
