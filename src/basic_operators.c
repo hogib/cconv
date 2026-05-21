@@ -7,23 +7,16 @@
 #include <stdint.h>
 #include <stdio.h>
 
-typedef struct {
-  uint8_t *data;
-  int w;
-  int h;
-  int channels_in_file;
-} blank_img;
-
 /* constructor for image. must then be destroyed*/
-static blank_img create_img(const char *inpath, uint out_channels) {
-  blank_img img = {0};
+Image load_img(const char *inpath) {
+  Image img = {0};
   img.data =
-      stbi_load(inpath, &img.w, &img.h, &img.channels_in_file, out_channels);
+      stbi_load(inpath, &img.w, &img.h, &img.channels_in_file, 4);
   return img;
 }
 
-static void destroy_img(blank_img *img) {
-  /* deconstructor that resets image */
+/* deconstructor that resets image */
+static void destroy_img(Image *img) {
   if (img && img->data) {
     img->data = NULL;
     img->channels_in_file = 0;
@@ -32,8 +25,9 @@ static void destroy_img(blank_img *img) {
   }
 }
 
+
 int invert_rgba(const char *inpath, const char *outpath) {
-  blank_img img = create_img(inpath, 4);
+  Image img = load_img(inpath);
 
   if (!img.data) {
     fprintf(stderr, "stbi_load failed: %s\n", stbi_failure_reason());
@@ -44,7 +38,8 @@ int invert_rgba(const char *inpath, const char *outpath) {
   for (size_t i = 0; i < n; i += 4) {
     img.data[i + 0] = 255u - img.data[i + 0]; // R
     img.data[i + 1] = 255u - img.data[i + 1]; // G
-    img.data[i + 2] = 255u - img.data[i + 2]; // B
+    img.data[i + 2] =
+        255u - img.data[i + 2]; // B
                                 // there's supposed to be an alfa
                                 // channel here leave it alone pls!
   }
@@ -62,42 +57,44 @@ int invert_rgba(const char *inpath, const char *outpath) {
   return 0;
 }
 
-int gayscale_rgba(const char *inpath, const char *outpath) {
 
-  blank_img img = create_img(inpath, 4);
 
-  if (!img.data) {
-    fprintf(stderr, "stbi_load failed: %s\n", stbi_failure_reason());
-    return 2;
-  }
+/* TODO: Fix function.
 
-  size_t size_pixels = (size_t)img.w * (size_t)img.h;
-  uint8_t *temp = malloc(size_pixels);
+// int rgba_binary(const char *inpath, const char *outpath) {
+//   grayscale_rgba(inpath, NULL);
+//
+//   size_t size_pixels = malloc(img.w * img.h);
+//}*/
+//
+//
 
-  if (!temp) {
-    fprintf(stderr, "Memory allocation failed!\n");
-    return 2;
-  }
+Image img_grayscale(const Image *in_img) {
+  Image out_img = {0};
+  size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
+  out_img.h = in_img->h;
+  out_img.w = in_img->w;
+  out_img.channels_in_file = 1;
+  out_img.data = malloc(size_pixels);
 
   for (size_t i = 0, j = 0; i < size_pixels * 4u; i += 4, j += 1) {
 
     uint8_t gvalue =
-        (uint8_t)(img.data[i + 0] * 0.299 + img.data[i + 1] * 0.587 +
-                  img.data[i + 2] * 0.114);
-    temp[j] = gvalue;
+        (uint8_t)(in_img->data[i + 0] * 0.299 + in_img->data[i + 1] * 0.587 +
+                  in_img->data[i + 2] * 0.114);
+    out_img.data[j] = gvalue;
   }
 
-  img.data = realloc(temp, size_pixels);
-  int stride_in_bytes = img.w * 1;
+  return out_img;
+}
 
-  if (!stbi_write_png(outpath, img.w, img.h, 1, img.data, stride_in_bytes)) {
-    fprintf(stderr, "stbi_write_png failed: %s\n", outpath);
-    destroy_img(&img);
-    free(temp);
+int write_img(Image *img, const char *outpath) {
+  if (!stbi_write_png(outpath, img->w, img->h, img->channels_in_file, img->data,
+                      (img->w * img->channels_in_file))) {
+    fprintf(stderr, "Image write failed: %s\n", stbi_failure_reason());
+    destroy_img(img);
     return 1;
   }
-
-  destroy_img(&img);
-  free(temp);
+  destroy_img(img);
   return 0;
 }

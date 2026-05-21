@@ -11,6 +11,7 @@ int main(int argc, char **argv) {
   const char *in_path = argv[1];
   const char *out_path = argv[2];
 
-  gayscale_rgba(in_path, out_path); // writes png
-
+  Image img = load_img(in_path);
+  Image gray_img = img_grayscale(&img);
+  write_img(&gray_img, out_path);
 }
