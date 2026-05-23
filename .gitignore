@@ -58,3 +58,4 @@ dkms.conf
 bin/
 build/
 tests/imp_tests/bin
+src/imp_tests/bin
