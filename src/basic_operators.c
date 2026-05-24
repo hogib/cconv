@@ -27,13 +27,28 @@ static Image create_img(int width, int height, int channels) {
 
 /* deconstructor that resets image. also to be called on main */
 void destroy_img(Image *img) {
-  if (img && img->data) {
+    if (img == NULL) {
+      return;
+    }
+
     free(img->data);
+    img->data = NULL;
+
     img->channels_in_file = 0;
     img->h = 0;
     img->w = 0;
-    img->data = NULL;
+}
+
+/* writes n channel png */
+int write_img(Image *img, const char *outpath) {
+  if (!stbi_write_png(outpath, img->w, img->h, img->channels_in_file, img->data,
+                      (img->w * img->channels_in_file))) {
+    fprintf(stdout, "Image write failed: %s\n", stbi_failure_reason());
+    destroy_img(img);
+    return -1;
   }
+  destroy_img(img);
+  return 0;
 }
 
 Image img_invert_rgba(const Image *in_img) {
@@ -71,13 +86,4 @@ Image img_binary(const Image *in_img) {
   return *in_img;
 }
 
-int write_img(Image *img, const char *outpath) {
-  if (!stbi_write_png(outpath, img->w, img->h, img->channels_in_file, img->data,
-                      (img->w * img->channels_in_file))) {
-    fprintf(stdout, "Image write failed: %s\n", stbi_failure_reason());
-    destroy_img(img);
-    return 1;
-  }
-  destroy_img(img);
-  return 0;
-}
+
