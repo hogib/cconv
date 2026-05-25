@@ -4,5 +4,6 @@
 
 int main(int argc, char **argv) {
 
-  opt_loop(argc, argv);
+  cli_action actions = {0};
+  get_cli_actions(argc, argv, &actions);
 }

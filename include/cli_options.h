@@ -9,6 +9,6 @@ typedef struct {
   int action_count;
 } cli_action;
 
-int opt_loop(int argc, char *argv[], cli_action *cli);
+int get_cli_actions(int argc, char *argv[], cli_action *cli);
 
 #endif

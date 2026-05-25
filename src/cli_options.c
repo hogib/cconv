@@ -12,7 +12,15 @@ static struct option long_options[] = {
     {"filter", required_argument, NULL, 'f'},
 };
 
-int opt_loop(int argc, char *argv[], cli_action *cli) {
+/*TODO: decide if I wanna have a help function at all
+ * pacman has a help function and I want a help function to maybe display
+ * available effects*/
+static int help(void) {
+  printf("Usage: \n");
+  return 0;
+}
+
+int get_cli_actions(int argc, char *argv[], cli_action *cli) {
   int ch;
   opterr = 0;
   cli->action_count = 0;
@@ -22,7 +30,7 @@ int opt_loop(int argc, char *argv[], cli_action *cli) {
 
     switch (ch) {
     case 'h':
-      printf("Usage: \n");
+      help();
       return 0;
 
     case 'i':
@@ -35,14 +43,14 @@ int opt_loop(int argc, char *argv[], cli_action *cli) {
 
     case 'f':
       while (optind < argc && argv[optind][0] != '-') {
-          if (cli->action_count < 15) {
-            cli->actions[cli->action_count++] = argv[optind];
-            optind++;
-          } else {
-            fprintf(stderr, "Error: Maximum of 15 actions allowed. \n");
-            return -1;
-          }
+        if (cli->action_count < 15) {
+          cli->actions[cli->action_count++] = argv[optind];
+          optind++;
+        } else {
+          fprintf(stderr, "Error: Maximum of 15 actions allowed. \n");
+          return -1;
         }
+      }
       break;
 
     case '?':
