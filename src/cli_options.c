@@ -1,4 +1,5 @@
 #define _GNU_SOURCE
+#include "../include/cli_options.h"
 #include <getopt.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -11,36 +12,47 @@ static struct option long_options[] = {
     {"filter", required_argument, NULL, 'f'},
 };
 
-/* TODO: define enum for filters */
-
-/* refer to man getopt for global variables */
-int opt_loop(int argc, char *argv[]) {
+int opt_loop(int argc, char *argv[], cli_action *cli) {
   int ch;
-  char *inpath = NULL;
-  char *outpath = NULL;
-
   opterr = 0;
+  cli->action_count = 0;
 
   while ((ch = getopt_long(argc, argv, short_option, long_options, NULL)) !=
          -1) {
+
     switch (ch) {
     case 'h':
       printf("Usage: \n");
-      break;
-    case 'i':
-      inpath = optarg;
-      printf("%s\n", inpath);
-      break;
-    case 'o':
-      outpath = optarg;
-      break;
-    case 'f':
-    /* TODO: with enums */
-    default:
-      printf("TODO\n");
-    }
-    return 0;
-  }
+      return 0;
 
-  return 1;
+    case 'i':
+      cli->inpath = optarg;
+      break;
+
+    case 'o':
+      cli->outpath = optarg;
+      break;
+
+    case 'f':
+      while (optind < argc && argv[optind][0] != '-') {
+          if (cli->action_count < 15) {
+            cli->actions[cli->action_count++] = argv[optind];
+            optind++;
+          } else {
+            fprintf(stderr, "Error: Maximum of 15 actions allowed. \n");
+            return -1;
+          }
+        }
+      break;
+
+    case '?':
+      fprintf(stderr, "Error: Unknown option passed.\n");
+      return -1;
+
+    default:
+      fprintf(stderr, "Error: Unhandled option. \n");
+      return -1;
+    }
+  }
+  return 0;
 }
