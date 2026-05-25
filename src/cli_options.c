@@ -25,8 +25,7 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
   opterr = 0;
   cli->action_count = 0;
 
-  while ((ch = getopt_long(argc, argv, short_option, long_options, NULL)) !=
-         -1) {
+  while ((ch = getopt_long(argc, argv, short_option, long_options, NULL)) != -1) {
 
     switch (ch) {
     case 'h':
@@ -42,6 +41,12 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
       break;
 
     case 'f':
+      if (cli->action_count < 15) {
+        cli->actions[cli->action_count++] = optarg;
+      } else {
+        fprintf(stderr, "Error: Maximum of 15 actions allowwed.\n");
+      }
+
       while (optind < argc && argv[optind][0] != '-') {
         if (cli->action_count < 15) {
           cli->actions[cli->action_count++] = argv[optind];
