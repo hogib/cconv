@@ -44,7 +44,7 @@ void destroy_img(Image *img) {
 }
 
 /* writes n channel png */
-int write_img(Image *img, const char *outpath) {
+int write_img(const Image *img, const char *outpath) {
   if (!stbi_write_png(outpath, img->w, img->h, img->channels_in_file, img->data,
                       (img->w * img->channels_in_file))) {
     fprintf(stderr, "Image write failed\n");
