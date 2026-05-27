@@ -30,6 +30,7 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
     switch (ch) {
     case 'h':
       help();
+      cli->help_called = true;
       return 0;
 
     case 'i':

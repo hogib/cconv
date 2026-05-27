@@ -21,6 +21,10 @@ int main(int argc, char **argv) {
   //
   cli_action actions = {0};
   get_cli_actions(argc, argv, &actions);
+  if (actions.help_called) {
+    return 0;
+  }  
+
   printf("Image in path: %s\nImage out path: %s\n", actions.inpath,
          actions.outpath);
   Image image = load_img(actions.inpath);
