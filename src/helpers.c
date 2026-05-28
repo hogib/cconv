@@ -1,7 +1,10 @@
 #include "../include/helpers.h"
 #include <stdarg.h>
 #include <stdio.h>
-void debug_msg(const char *prefix, const char *format, ...) {
+void debug_msg(const bool state, const char *prefix, const char *format, ...) {
+  if (state == false) {
+    return;
+  }
   fprintf(stderr, "[%s]", prefix);
 
   va_list args;

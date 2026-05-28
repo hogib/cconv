@@ -4,12 +4,13 @@
 #include <stdio.h>
 #include <unistd.h>
 
-static char *short_option = ":hi:o:f:";
+static char *short_option = ":hi:o:f:v";
 static struct option long_options[] = {
     {"help", no_argument, NULL, 'h'},
     {"input", required_argument, NULL, 'i'},
     {"output", required_argument, NULL, 'o'},
     {"filter", required_argument, NULL, 'f'},
+    {"verbose", no_argument, NULL, 'v'},
 };
 
 /*TODO: decide if I wanna have a help function at all
@@ -24,6 +25,7 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
   int ch;
   opterr = 0;
   cli->action_count = 0;
+  cli->verbose = false;
 
   while ((ch = getopt_long(argc, argv, short_option, long_options, NULL)) != -1) {
 
@@ -58,6 +60,9 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
         }
       }
       break;
+
+    case 'v':
+      cli->verbose = true;
 
     case '?':
       fprintf(stderr, "Error: Unknown option passed.\n");

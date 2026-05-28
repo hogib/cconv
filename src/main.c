@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
   get_cli_actions(argc, argv, &actions);
 
   if (actions.help_called) {
-    debug_msg("DEBUG", "Help called, exiting.\n");
+    debug_msg(actions.verbose, "DEBUG", "Help called, exiting.\n");
     return 0;
   }
 
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
     actions.outpath = "out.png";
   }
 
-  debug_msg("INFO", "/*Image in path: %s\nImage out path: %s*/\n",
+  debug_msg(actions.verbose, "INFO", "/*Image in path: %s\nImage out path: %s*/\n",
             actions.inpath, actions.outpath);
 
   Image image = load_img(actions.inpath);
@@ -47,12 +47,12 @@ int main(int argc, char **argv) {
 
     switch (current_action) {
     case ACTION_INVERT:
-      debug_msg("INFO", "Current action being performed: %i\n", current_action);
+      debug_msg(actions.verbose, "INFO", "Current action being performed: %i\n", current_action);
       img_invert_rgba(&image);
       break;
 
     case ACTION_GRAYSCALE:
-      debug_msg("INFO", "Current action being performed: %i\n", current_action);
+      debug_msg(actions.verbose, "INFO", "Current action being performed: %i\n", current_action);
       img_grayscale(&image);
       break;
 
