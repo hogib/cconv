@@ -21,13 +21,25 @@ static ActionIdentifier resolve_action(const char *action_string) {
 int main(int argc, char **argv) {
   cli_action actions = {0};
   get_cli_actions(argc, argv, &actions);
+
   if (actions.help_called) {
     debug_msg("DEBUG", "Help called, exiting.\n");
     return 0;
   }
 
-  debug_msg("INFO", "Image in path: %s\nImage out path: %s\n", actions.inpath,
-            actions.outpath);
+  if (actions.inpath == NULL) {
+    fprintf(stderr, "Please specify input file.\n");
+    help();
+    return -3;
+  }
+
+  if (actions.outpath == NULL) {
+    actions.outpath = "out.png";
+  }
+
+  debug_msg("INFO", "/*Image in path: %s\nImage out path: %s*/\n",
+            actions.inpath, actions.outpath);
+
   Image image = load_img(actions.inpath);
 
   for (int i = 0; i < actions.action_count; i++) {

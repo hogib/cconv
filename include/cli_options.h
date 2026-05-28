@@ -11,5 +11,6 @@ typedef struct {
 } cli_action;
 
 int get_cli_actions(int argc, char *argv[], cli_action *cli);
+int help(void);
 
 #endif

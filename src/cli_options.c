@@ -15,7 +15,7 @@ static struct option long_options[] = {
 /*TODO: decide if I wanna have a help function at all
  * pacman has a help function and I want a help function to maybe display
  * available effects*/
-static int help(void) {
+int help(void) {
   printf("Usage: \n");
   return 0;
 }
