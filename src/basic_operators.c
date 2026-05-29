@@ -18,6 +18,7 @@ Image load_img(const char *inpath) {
   return img;
 }
 
+/* useless? */
 static Image create_img(int width, int height, int channels) {
   Image img = {0};
   img.w = width;
@@ -37,7 +38,6 @@ void destroy_img(Image *img) {
 
   stbi_image_free(img->data);
   img->data = NULL;
-
   img->channels_in_file = 0;
   img->h = 0;
   img->w = 0;
@@ -56,33 +56,44 @@ int write_img(const Image *img, const char *outpath) {
 int img_invert_rgba(Image *in_img) {
   size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
 
-  for (size_t i = 0; i < size_pixels * 4u; i += 4) {
-    in_img->data[i + 0] = 255u - in_img->data[i + 0]; // R
-    in_img->data[i + 1] = 255u - in_img->data[i + 1]; // G
-    in_img->data[i + 2] = 255u - in_img->data[i + 2]; // B
-    in_img->data[i + 3] = in_img->data[i + 3];        // copy alfa channel over
+  if (in_img->channels_in_file == 4) {
+    for (size_t i = 0; i < size_pixels * 4u; i += 4) {
+      in_img->data[i + 0] = 255u - in_img->data[i + 0]; // R
+      in_img->data[i + 1] = 255u - in_img->data[i + 1]; // G
+      in_img->data[i + 2] = 255u - in_img->data[i + 2]; // B
+      in_img->data[i + 3] = in_img->data[i + 3]; // copy alfa channel over
+    }
+  } else {
+    for (size_t i = 0; i < size_pixels; i++) {
+      in_img->data[i] = 255 - in_img->data[i];
+    }
   }
-
   return 0;
 }
 
-/* TODO: clean up and error handeling. 1 has to be hardcoded */
 int img_grayscale(Image *in_img) {
   size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
   in_img->channels_in_file = 1;
 
   for (size_t i = 0, j = 0; i < size_pixels * 4u; i += 4, j += 1) {
-
     uint8_t gvalue =
         (uint8_t)(in_img->data[i + 0] * 0.299 + in_img->data[i + 1] * 0.587 +
                   in_img->data[i + 2] * 0.114);
     in_img->data[j] = gvalue;
   }
-
   return 0;
 }
 
-Image img_binary(const Image *in_img) {
-  /* TODO: write function */
-  return *in_img;
+int img_binary(Image *in_img) {
+  img_grayscale(in_img);
+  size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
+
+  for (size_t i = 0; i < size_pixels; i++) {
+    if (in_img->data[i] > 128u) {
+      in_img->data[i] = 0;
+    } else {
+      in_img->data[i] = 255u;
+    }
+  }
+  return 0;
 }

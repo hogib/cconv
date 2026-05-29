@@ -1,12 +1,14 @@
 #include "../include/basic_operators.h"
 #include "../include/cli_options.h"
 #include "../include/helpers.h"
+#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 
 typedef enum {
   ACTION_INVERT,
   ACTION_GRAYSCALE,
+  ACTION_BINARY,
   ACTION_UNKNOWN,
 } ActionIdentifier;
 
@@ -15,6 +17,8 @@ static ActionIdentifier resolve_action(const char *action_string) {
     return ACTION_INVERT;
   if (strcmp(action_string, "grayscale") == 0)
     return ACTION_GRAYSCALE;
+  if (strcmp(action_string, "binary") == 0)
+    return ACTION_BINARY;
   return ACTION_UNKNOWN;
 }
 
@@ -37,8 +41,9 @@ int main(int argc, char **argv) {
     actions.outpath = "out.png";
   }
 
-  debug_msg(actions.verbose, "INFO", "/*Image in path: %s\nImage out path: %s*/\n",
-            actions.inpath, actions.outpath);
+  debug_msg(actions.verbose, "INFO",
+            "/*Image in path: %s\nImage out path: %s*/\n", actions.inpath,
+            actions.outpath);
 
   Image image = load_img(actions.inpath);
 
@@ -47,13 +52,21 @@ int main(int argc, char **argv) {
 
     switch (current_action) {
     case ACTION_INVERT:
-      debug_msg(actions.verbose, "INFO", "Current action being performed: %i\n", current_action);
+      debug_msg(actions.verbose, "INFO", "Current action being performed: %i\n",
+                current_action);
       img_invert_rgba(&image);
       break;
 
     case ACTION_GRAYSCALE:
-      debug_msg(actions.verbose, "INFO", "Current action being performed: %i\n", current_action);
+      debug_msg(actions.verbose, "INFO", "Current action being performed: %i\n",
+                current_action);
       img_grayscale(&image);
+      break;
+
+    case ACTION_BINARY:
+      debug_msg(actions.verbose, "INFO", "Current action being performed: %i\n",
+                current_action);
+      img_binary(&image);
       break;
 
     case ACTION_UNKNOWN:
