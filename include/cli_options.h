@@ -8,8 +8,10 @@ typedef struct {
   char *outpath;
   int action_count;
   bool help_called;
+  bool verbose;
 } cli_action;
 
 int get_cli_actions(int argc, char *argv[], cli_action *cli);
+int help(void);
 
 #endif

@@ -6,6 +6,7 @@ add_executable(cconv
 		src/main.c
 		src/basic_operators.c
 		src/cli_options.c
+		src/helpers.c
 )
 
 target_include_directories(cconv PRIVATE include)

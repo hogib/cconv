@@ -4,19 +4,24 @@
 #include <stdio.h>
 #include <unistd.h>
 
-static char *short_option = ":hi:o:f:";
+static char *short_option = ":hi:o:e:v";
 static struct option long_options[] = {
     {"help", no_argument, NULL, 'h'},
     {"input", required_argument, NULL, 'i'},
     {"output", required_argument, NULL, 'o'},
-    {"filter", required_argument, NULL, 'f'},
+    {"effect", required_argument, NULL, 'e'},
+    {"verbose", no_argument, NULL, 'v'},
 };
 
-/*TODO: decide if I wanna have a help function at all
- * pacman has a help function and I want a help function to maybe display
- * available effects*/
-static int help(void) {
-  printf("Usage: \n");
+int help(void) {
+  printf("Usage: cconv [OPTIONS]\n");
+  printf("IO options:\n");
+  printf("-i --input    Input file path.\n");
+  printf("-o --output   Output file name, path. Will generate output.png if "
+         "not specified\n");
+  printf("\nImage manipulation options:\n");
+  printf("-e --effect   Apply specified effects sequentially.\n");
+  printf("Avaliable effects:\ngreyscale, invert, binary\n");
   return 0;
 }
 
@@ -24,8 +29,10 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
   int ch;
   opterr = 0;
   cli->action_count = 0;
+  cli->verbose = false;
 
-  while ((ch = getopt_long(argc, argv, short_option, long_options, NULL)) != -1) {
+  while ((ch = getopt_long(argc, argv, short_option, long_options, NULL)) !=
+         -1) {
 
     switch (ch) {
     case 'h':
@@ -41,7 +48,7 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
       cli->outpath = optarg;
       break;
 
-    case 'f':
+    case 'e':
       if (cli->action_count < 15) {
         cli->actions[cli->action_count++] = optarg;
       } else {
@@ -58,6 +65,9 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
         }
       }
       break;
+
+    case 'v':
+      cli->verbose = true;
 
     case '?':
       fprintf(stderr, "Error: Unknown option passed.\n");
