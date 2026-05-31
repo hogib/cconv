@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
   get_cli_actions(argc, argv, &actions);
 
   if (actions.help_called) {
-    debug_msg(actions.verbose, "DEBUG", "Help called, exiting.\n");
+    debug_msg(actions.verbose, "DEBUG", "*/Help called, exiting.*/\n");
     return 0;
   }
 
@@ -52,20 +52,14 @@ int main(int argc, char **argv) {
 
     switch (current_action) {
     case ACTION_INVERT:
-      debug_msg(actions.verbose, "INFO", "Current action being performed: %i\n",
-                current_action);
       img_invert_rgba(&image);
       break;
 
     case ACTION_GRAYSCALE:
-      debug_msg(actions.verbose, "INFO", "Current action being performed: %i\n",
-                current_action);
       img_grayscale(&image);
       break;
 
     case ACTION_BINARY:
-      debug_msg(actions.verbose, "INFO", "Current action being performed: %i\n",
-                current_action);
       img_binary(&image);
       break;
 
@@ -83,7 +77,7 @@ int main(int argc, char **argv) {
 
   printf("Writing image at %s\n", actions.outpath);
   write_img(&image, actions.outpath);
-  printf("Destroying image\n");
+  debug_msg(actions.verbose, "INFO", "/*Destroying image*/\n");
   destroy_img(&image);
 
   return 0;

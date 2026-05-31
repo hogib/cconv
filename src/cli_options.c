@@ -29,7 +29,6 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
   int ch;
   opterr = 0;
   cli->action_count = 0;
-  cli->verbose = false;
 
   while ((ch = getopt_long(argc, argv, short_option, long_options, NULL)) !=
          -1) {
@@ -68,6 +67,7 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
 
     case 'v':
       cli->verbose = true;
+      break;
 
     case '?':
       fprintf(stderr, "Error: Unknown option passed.\n");
