@@ -11,6 +11,8 @@ add_executable(cconv
 
 target_include_directories(cconv PRIVATE include)
 
+target_link_libraries(cconv PRIVATE m)
+
 target_compile_options(cconv PRIVATE
 		-Wall
 		-Wextra
