@@ -1,5 +1,6 @@
 #include "../include/matrixconv.h"
 #include <stdlib.h>
+#include <math.h>
 
 static uint8_t clamp_to_8bit(float value) {
   if (value < 0)
@@ -33,7 +34,7 @@ int convolve_separable_rgba(uint8_t *input, int width, int height,
   if (temp_buffer == NULL)
     return -1;
 
-  /* PASS 1: HORIZONTAL (Reads uint8_t -> Writes float) */
+  /* HORIZONTAL (Reads uint8_t -> Writes float) */
   for (int y = 0; y < height; ++y) {
     for (int x = 0; x < width; ++x) {
       float sum_r = 0.0f, sum_g = 0.0f, sum_b = 0.0f;
@@ -63,7 +64,7 @@ int convolve_separable_rgba(uint8_t *input, int width, int height,
     }
   }
 
-  /* PASS 2: VERTICAL (Reads float -> Writes uint8_t) */
+  /* VERTICAL (Reads float -> Writes uint8_t) */
   for (int y = 0; y < height; ++y) {
     for (int x = 0; x < width; ++x) {
       float sum_r = 0.0f, sum_g = 0.0f, sum_b = 0.0f;
@@ -162,4 +163,31 @@ int convolve_separable_mono(uint8_t *input, int width, int height,
 
   free(temp_buffer);
   return 0;
+}
+
+/* Generates a 1D Gaussian kernel */
+float* create_gaussian_kernel(int k_size, float sigma) {
+    // Allocate memory for the 1D kernel
+    float *kernel = (float *)malloc(k_size * sizeof(float));
+    if (kernel == NULL) return NULL;
+
+    float sum = 0.0f;
+    int k_half = k_size / 2;
+
+    // Calculate the Gaussian curve values
+    for (int i = 0; i < k_size; i++) {
+        float x = (float)(i - k_half);
+        
+        // Calculate e^(-x^2 / 2*sigma^2)
+        kernel[i] = expf(-(x * x) / (2.0f * sigma * sigma));
+        
+        sum += kernel[i];
+    }
+
+    // Normalize the kernel
+    for (int i = 0; i < k_size; i++) {
+        kernel[i] /= sum;
+    }
+
+    return kernel;
 }

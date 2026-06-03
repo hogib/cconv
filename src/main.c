@@ -4,6 +4,7 @@
 #include "../include/matrixconv.h"
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 typedef enum {
@@ -13,10 +14,6 @@ typedef enum {
   ACTION_GAUSS,
   ACTION_UNKNOWN,
 } ActionIdentifier;
-
-
-static const float gauss_3_h[3] = {0.25f, 0.50f, 0.25f};
-static const float gauss_3_v[3] = {0.25f, 0.50f, 0.25f};
 
 static ActionIdentifier resolve_action(const char *action_string) {
   if (strcmp(action_string, "invert") == 0)
@@ -79,14 +76,17 @@ int main(int argc, char **argv) {
       break;
 
     case ACTION_GAUSS:
-      // TODO:
+      float sigma = 5.0f;
+      int k_size = 31;
+      const float *gauss_1d = create_gaussian_kernel(k_size, sigma);
+
       if (image.channels_in_file == 4) {
-        convolve_separable_rgba(image.data, image.w, image.h, gauss_3_h,
-                                gauss_3_v, 3);
+        convolve_separable_rgba(image.data, image.w, image.h, gauss_1d,
+                                gauss_1d, k_size);
         break;
       } else if (image.channels_in_file == 2) {
-        convolve_separable_mono(image.data, image.w, image.h, gauss_3_h,
-                                gauss_3_v, 3);
+        convolve_separable_mono(image.data, image.w, image.h, gauss_1d,
+                                gauss_1d, k_size);
         break;
       }
       return -3;
