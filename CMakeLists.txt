@@ -7,6 +7,7 @@ add_executable(cconv
 		src/basic_operators.c
 		src/cli_options.c
 		src/helpers.c
+		src/matrixconv.c
 )
 
 target_include_directories(cconv PRIVATE include)

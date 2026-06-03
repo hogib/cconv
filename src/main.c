@@ -1,6 +1,7 @@
 #include "../include/basic_operators.h"
 #include "../include/cli_options.h"
 #include "../include/helpers.h"
+#include "../include/matrixconv.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -9,8 +10,13 @@ typedef enum {
   ACTION_INVERT,
   ACTION_GRAYSCALE,
   ACTION_BINARY,
+  ACTION_GAUSS,
   ACTION_UNKNOWN,
 } ActionIdentifier;
+
+
+static const float gauss_3_h[3] = {0.25f, 0.50f, 0.25f};
+static const float gauss_3_v[3] = {0.25f, 0.50f, 0.25f};
 
 static ActionIdentifier resolve_action(const char *action_string) {
   if (strcmp(action_string, "invert") == 0)
@@ -19,6 +25,9 @@ static ActionIdentifier resolve_action(const char *action_string) {
     return ACTION_GRAYSCALE;
   if (strcmp(action_string, "binary") == 0)
     return ACTION_BINARY;
+  if (strcmp(action_string, "gauss") == 0)
+    return ACTION_GAUSS;
+
   return ACTION_UNKNOWN;
 }
 
@@ -68,6 +77,19 @@ int main(int argc, char **argv) {
                 current_action);
       img_binary(&image);
       break;
+
+    case ACTION_GAUSS:
+      // TODO:
+      if (image.channels_in_file == 4) {
+        convolve_separable_rgba(image.data, image.w, image.h, gauss_3_h,
+                                gauss_3_v, 3);
+        break;
+      } else if (image.channels_in_file == 2) {
+        convolve_separable_mono(image.data, image.w, image.h, gauss_3_h,
+                                gauss_3_v, 3);
+        break;
+      }
+      return -3;
 
     case ACTION_UNKNOWN:
       fprintf(stderr, "Unknown action requested\n");

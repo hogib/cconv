@@ -9,10 +9,6 @@ static uint8_t clamp_to_8bit(float value) {
   return value;
 }
 
-/* OPERATORS */
-float sobel_x_horizontal[3] = {-1.0f, 0.0f, 1.0f};
-float sobel_x_vertical[3] = {1.0f, 2.0f, 1.0f};
-
 /**
  * Applies a separable 2D convolution using two 1D passes.
  * * @param input    1D array of original image pixels (RGBA)
@@ -95,7 +91,8 @@ int convolve_separable_rgba(uint8_t *input, int width, int height,
       input[out_idx] = clamp_to_8bit(sum_r);
       input[out_idx + 1] = clamp_to_8bit(sum_g);
       input[out_idx + 2] = clamp_to_8bit(sum_b);
-      input[out_idx + 3] = (uint8_t)temp_buffer[out_idx + 3]; /* Restore alpha */
+      input[out_idx + 3] =
+          (uint8_t)temp_buffer[out_idx + 3]; /* Restore alpha */
     }
   }
 
@@ -105,8 +102,8 @@ int convolve_separable_rgba(uint8_t *input, int width, int height,
 
 /* For single channel images */
 int convolve_separable_mono(uint8_t *input, int width, int height,
-                              const float *kernel_h, const float *kernel_v,
-                              int k_size) {
+                            const float *kernel_h, const float *kernel_v,
+                            int k_size) {
 
   int k_half = k_size / 2;
   int num_pixels = width * height;
