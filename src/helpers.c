@@ -1,4 +1,4 @@
-#include "../include/helpers.h"
+#include "helpers.h"
 #include <stdarg.h>
 #include <stdio.h>
 void debug_msg(const bool state, const char *prefix, const char *format, ...) {

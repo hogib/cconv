@@ -1,10 +1,9 @@
-#include "../include/basic_operators.h"
-#include "../include/cli_options.h"
-#include "../include/helpers.h"
-#include "../include/matrixconv.h"
+#include "basic_operators.h"
+#include "cli_options.h"
+#include "helpers.h"
+#include "matrixconv.h"
 #include <assert.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 typedef enum {

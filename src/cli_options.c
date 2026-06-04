@@ -1,5 +1,5 @@
 #define _GNU_SOURCE
-#include "../include/cli_options.h"
+#include "cli_options.h"
 #include <getopt.h>
 #include <stdio.h>
 #include <unistd.h>

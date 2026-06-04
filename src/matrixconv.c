@@ -1,4 +1,4 @@
-#include "../include/matrixconv.h"
+#include "matrixconv.h"
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
