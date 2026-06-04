@@ -11,6 +11,10 @@ static uint8_t clamp_to_8bit(float value) {
   return value;
 }
 
+/*FIX: In place image manipulation makes it impossible to perform some operators 
+ * accurately due to clamping to 8 bit. This function either needs to return 1d float
+ * array or loaded image needs to be converted to float across all operations, then clamped
+ * back to 8 bit during write.*/
 int convolve_rgba(uint8_t *input, int width, int height, const float *kernel,
                   int k_size) {
   int k_half = k_size / 2;
