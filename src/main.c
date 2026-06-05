@@ -1,7 +1,7 @@
-#include "basic_operators.h"
-#include "cli_options.h"
-#include "helpers.h"
-#include "matrixconv.h"
+#include "../include/basic_operators.h"
+#include "../include/cli_options.h"
+#include "../include/helpers.h"
+#include "../include/matrixconv.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>

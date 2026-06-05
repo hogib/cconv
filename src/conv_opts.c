@@ -1,6 +1,6 @@
-#include "conv_opts.h"
-#include "basic_operators.h"
-#include "matrixconv.h"
+#include "../include/conv_opts.h"
+#include "../include/basic_operators.h"
+#include "../include/matrixconv.h"
 #include <stdio.h>
 #include <stdlib.h>
 
