@@ -1,30 +1,21 @@
 #include "../include/matrixconv.h"
 #include <math.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
-static uint8_t clamp_to_8bit(float value) {
-  if (value < 0)
-    return 0;
-  if (value > 255.0f)
-    return 255;
-  return value;
+uint8_t *f_arrarr_to_uint8(const float *f_arr) {
+  // TODO:
+  return NULL;
 }
 
-/*FIX: In place image manipulation makes it impossible to perform some operators 
- * accurately due to clamping to 8 bit. This function either needs to return 1d float
- * array or loaded image needs to be converted to float across all operations, then clamped
- * back to 8 bit during write.*/
-int convolve_rgba(uint8_t *input, int width, int height, const float *kernel,
-                  int k_size) {
+float *convolve_rgba(const uint8_t *input, int width, int height,
+                     const float *kernel, int k_size) {
   int k_half = k_size / 2;
   int num_pixels = width * height * 4;
 
-  uint8_t *temp_input = (uint8_t *)malloc(num_pixels * sizeof(uint8_t));
-  if (temp_input == NULL) {
-    return -1;
-  }
-  memcpy(temp_input, input, num_pixels);
+  float *output = (float *)malloc(num_pixels * sizeof(float));
 
   /* 2D Image Pass */
   for (int y = 0; y < height; ++y) {
@@ -52,34 +43,36 @@ int convolve_rgba(uint8_t *input, int width, int height, const float *kernel,
           int kernel_idx = (ky + k_half) * k_size + (kx + k_half);
           float weight = kernel[kernel_idx];
 
-          sum_r += temp_input[pixel_idx] * weight;
-          sum_g += temp_input[pixel_idx + 1] * weight;
-          sum_b += temp_input[pixel_idx + 2] * weight;
+          sum_r += input[pixel_idx] * weight;
+          sum_g += input[pixel_idx + 1] * weight;
+          sum_b += input[pixel_idx + 2] * weight;
         }
       }
 
       int out_idx = (y * width + x) * 4;
 
-      input[out_idx] = clamp_to_8bit(sum_r);
-      input[out_idx + 1] = clamp_to_8bit(sum_g);
-      input[out_idx + 2] = clamp_to_8bit(sum_b);
+      output[out_idx] = sum_r;
+      output[out_idx + 1] = sum_g;
+      output[out_idx + 2] = sum_b;
+      output[out_idx + 3] = (float)input[out_idx + 3];
     }
   }
 
-  free(temp_input);
-  return 0;
+  return output;
 }
 
-int convolve_separable_rgba(uint8_t *input, int width, int height,
-                            const float *kernel_h, const float *kernel_v,
-                            int k_size) {
+float *convolve_separable_rgba(const uint8_t *input, int width, int height,
+                               const float *kernel_h, const float *kernel_v,
+                               int k_size) {
 
   int k_half = k_size / 2;
   int num_pixels = width * height * 4;
 
   float *temp_buff = (float *)malloc(num_pixels * sizeof(float));
-  if (temp_buff == NULL)
-    return -1;
+  float *output = (float *)malloc(num_pixels * sizeof(float));
+
+  if (temp_buff == NULL || output == NULL)
+    return NULL;
 
   /* HORIZONTAL */
   for (int y = 0; y < height; ++y) {
@@ -136,30 +129,30 @@ int convolve_separable_rgba(uint8_t *input, int width, int height,
       int out_idx = (y * width + x) * 4;
 
       /* Clamp results */
-      input[out_idx] = clamp_to_8bit(sum_r);
-      input[out_idx + 1] = clamp_to_8bit(sum_g);
-      input[out_idx + 2] = clamp_to_8bit(sum_b);
-      input[out_idx + 3] = (uint8_t)temp_buff[out_idx + 3]; // Restore alpha
+      output[out_idx] = sum_r;
+      output[out_idx + 1] = sum_g;
+      output[out_idx + 2] = sum_b;
+      output[out_idx + 3] = (float)temp_buff[out_idx + 3]; // Restore alpha
     }
   }
 
   free(temp_buff);
-  return 0;
+  return output;
 }
 
-
-
 /* For single channel images */
-int convolve_separable_mono(uint8_t *input, int width, int height,
-                            const float *kernel_h, const float *kernel_v,
-                            int k_size) {
+float *convolve_separable_mono(const uint8_t *input, int width, int height,
+                               const float *kernel_h, const float *kernel_v,
+                               int k_size) {
 
   int k_half = k_size / 2;
   int num_pixels = width * height;
 
   float *temp_buff = (float *)malloc(num_pixels * sizeof(float));
-  if (temp_buff == NULL)
-    return -1;
+  float *output = (float *)malloc(num_pixels * sizeof(float));
+
+  if (temp_buff == NULL || output == NULL)
+    return NULL;
 
   for (int y = 0; y < height; ++y) {
     for (int x = 0; x < width; ++x) {
@@ -204,12 +197,12 @@ int convolve_separable_mono(uint8_t *input, int width, int height,
 
       int out_idx = (y * width + x) * 4;
 
-      input[out_idx] = clamp_to_8bit(sum_c);
+      output[out_idx] = sum_c;
     }
   }
 
   free(temp_buff);
-  return 0;
+  return output;
 }
 
 /* Generates a 1D Gaussian kernel */
