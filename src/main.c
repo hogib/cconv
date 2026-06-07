@@ -1,7 +1,7 @@
 #include "../include/basic_operators.h"
 #include "../include/cli_options.h"
+#include "../include/conv_opts.h"
 #include "../include/helpers.h"
-#include "../include/matrixconv.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,6 +11,8 @@ typedef enum {
   ACTION_GRAYSCALE,
   ACTION_BINARY,
   ACTION_GAUSS,
+  ACTION_SOBELX,
+  ACTION_SOBELY,
   ACTION_UNKNOWN,
 } ActionIdentifier;
 
@@ -23,6 +25,10 @@ static ActionIdentifier resolve_action(const char *action_string) {
     return ACTION_BINARY;
   if (strcmp(action_string, "gauss") == 0)
     return ACTION_GAUSS;
+  if (strcmp(action_string, "sobelx") == 0)
+    return ACTION_SOBELX;
+  if (strcmp(action_string, "sobely") == 0)
+    return ACTION_SOBELY;
 
   return ACTION_UNKNOWN;
 }
@@ -75,20 +81,16 @@ int main(int argc, char **argv) {
       break;
 
     case ACTION_GAUSS:
-      float sigma = 5.0f;
-      int k_size = 31;
-      const float *gauss_1d = create_gaussian_kernel(k_size, sigma);
+      conv_gaussian_blur(&image, 5.0f);
+      break;
 
-      if (image.channels_in_file == 4) {
-        convolve_separable_rgba(image.data, image.w, image.h, gauss_1d,
-                                gauss_1d, k_size);
-        break;
-      } else if (image.channels_in_file == 2) {
-        convolve_separable_mono(image.data, image.w, image.h, gauss_1d,
-                                gauss_1d, k_size);
-        break;
-      }
-      return -3;
+    case ACTION_SOBELX:
+      conv_sobel_x(&image);
+      break;
+
+    case ACTION_SOBELY:
+      conv_sobel_y(&image);
+      break;
 
     case ACTION_UNKNOWN:
       fprintf(stderr, "Unknown action requested\n");

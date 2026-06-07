@@ -5,9 +5,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-uint8_t *f_arrarr_to_uint8(const float *f_arr) {
-  // TODO:
-  return NULL;
+uint8_t *clamp_farr(const float *f_arr, size_t arr_size) {
+  uint8_t *clamped_arr = (uint8_t *)malloc(sizeof(uint8_t) * arr_size);
+  if (clamped_arr == NULL)
+    return NULL;
+
+  for (size_t i = 0; i < arr_size; ++i) {
+    if (isnan(f_arr[i]) || f_arr[i] < 0.0f) {
+      clamped_arr[i] = 0u;
+    } else if (f_arr[i] > 255.0f) {
+      clamped_arr[i] = 255u;
+    } else {
+      clamped_arr[i] = (uint8_t)round(f_arr[i]);
+    }
+  }
+  return clamped_arr;
 }
 
 float *convolve_rgba(const uint8_t *input, int width, int height,
@@ -166,7 +178,7 @@ float *convolve_separable_mono(const uint8_t *input, int width, int height,
         else if (ix >= width)
           ix = width - 1;
 
-        int pixel_idx = (y * width + ix) * 4;
+        int pixel_idx = (y * width + ix);
         float weight = kernel_h[kx + k_half];
 
         sum_c += input[pixel_idx] * weight;
@@ -195,7 +207,7 @@ float *convolve_separable_mono(const uint8_t *input, int width, int height,
         sum_c += temp_buff[temp_idx] * weight;
       }
 
-      int out_idx = (y * width + x) * 4;
+      int out_idx = (y * width + x);
 
       output[out_idx] = sum_c;
     }
