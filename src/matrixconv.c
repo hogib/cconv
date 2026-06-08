@@ -241,3 +241,37 @@ float *create_gaussian_kernel(int k_size, float sigma) {
 
   return kernel;
 }
+
+float *create_log_kernel(int k_size, float sigma) {
+  float *kernel = (float *)malloc(k_size * k_size * sizeof(float));
+  if (kernel == NULL)
+    return NULL;
+
+  int k_half = k_size / 2;
+  float sigma2 = sigma * sigma;
+  float sigma4 = sigma2 * sigma2;
+  float sum = 0.0f;
+
+  for (int ky = -k_half; ky <= k_half; ++ky) {
+    for (int kx = -k_half; kx <= k_half; ++kx) {
+      float x2 = (float)(kx * kx);
+      float y2 = (float)(ky * ky);
+
+      // Standard continuous formula for Laplacian of Gaussian
+      float exponent = -(x2 + y2) / (2.0f * sigma2);
+      float log_val = (-1.0f / (M_PI * sigma4)) *
+                      (1.0f - ((x2 + y2) / (2.0f * sigma2))) * expf(exponent);
+
+      int idx = (ky + k_half) * k_size + (kx + k_half);
+      kernel[idx] = log_val;
+      sum += log_val;
+    }
+  }
+  float correction = sum / (float)(k_size * k_size);
+
+  for (int i = 0; i < k_size * k_size; ++i) {
+    kernel[i] -= correction;
+  }
+
+  return kernel;
+}
