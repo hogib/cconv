@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -94,5 +95,36 @@ int img_binary(image_t *in_img) {
       in_img->data[i] = 255u;
     }
   }
+  return 0;
+}
+
+int img_contrast_stretch_g(image_t *in_img) {
+  size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
+  uint8_t r_min = 255u;
+  uint8_t r_max = 0u;
+
+  for (size_t i = 0; i < size_pixels; ++i) {
+    if (in_img->data[i] < r_min)
+      r_min = in_img->data[i];
+    if (in_img->data[i] > r_max)
+      r_max = in_img->data[i];
+  }
+
+  if (r_min == r_max)
+    r_max = r_min + 1;
+
+  float scale = 255 / (r_max - r_min);
+
+  for (size_t i = 0; i < size_pixels; ++i) {
+    float normalized = (in_img->data[i] - r_min) * scale;
+
+    if (normalized > 255u)
+      normalized = 255u;
+    if (normalized < 0u)
+      normalized = 0u;
+
+    in_img->data[i] = (uint8_t)normalized;
+  }
+
   return 0;
 }
