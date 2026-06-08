@@ -1,5 +1,5 @@
-#ifndef BASIC_OPERATORS_H
-#define BASIC_OPERATORS_H
+#ifndef POINT_OPTS_H
+#define POINT_OPTS_H
 
 #include <stdint.h>
 
@@ -9,10 +9,6 @@ typedef struct {
   int h;
   int channels_in_file;
 } Image;
-
-/* FIX:Save image data as float and clamp to 8 bit during write?*/
-
-
 
 Image load_img(const char *inpath);
 int img_invert_rgba(Image *in_img);

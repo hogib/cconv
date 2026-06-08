@@ -1,5 +1,5 @@
 #include "../include/conv_opts.h"
-#include "../include/basic_operators.h"
+#include "../include/point_opts.h"
 #include "../include/matrixconv.h"
 #include <stddef.h>
 #include <stdint.h>

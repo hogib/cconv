@@ -2,10 +2,9 @@
 #include <stdlib.h>
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "../include/basic_operators.h"
+#include "../include/point_opts.h"
 #include "../include/stb_image.h"
 #include "../include/stb_image_write.h"
-#include <stdio.h>
 
 /* to be called on main*/
 Image load_img(const char *inpath) {

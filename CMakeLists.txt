@@ -4,7 +4,7 @@ project(cconv LANGUAGES C)
 
 add_executable(cconv
 		src/main.c
-		src/basic_operators.c
+		src/point_opts.c
 		src/cli_options.c
 		src/helpers.c
 		src/matrixconv.c

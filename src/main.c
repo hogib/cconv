@@ -1,4 +1,3 @@
-#include "../include/basic_operators.h"
 #include "../include/cli_options.h"
 #include "../include/conv_opts.h"
 #include "../include/helpers.h"
@@ -45,7 +44,7 @@ int main(int argc, char **argv) {
   if (actions.inpath == NULL) {
     fprintf(stderr, "Please specify input file.\n");
     help();
-    return -3;
+    return 0;
   }
 
   if (actions.outpath == NULL) {
