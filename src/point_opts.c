@@ -7,8 +7,8 @@
 #include "../include/stb_image_write.h"
 
 /* to be called on main*/
-Image load_img(const char *inpath) {
-  Image img = {0};
+image_t load_img(const char *inpath) {
+  image_t img = {0};
   img.data = stbi_load(inpath, &img.w, &img.h, &img.channels_in_file, 4);
 
   if (img.data != NULL) {
@@ -18,8 +18,8 @@ Image load_img(const char *inpath) {
 }
 
 /* useless? */
-static Image create_img(int width, int height, int channels) {
-  Image img = {0};
+static image_t create_img(int width, int height, int channels) {
+  image_t img = {0};
   img.w = width;
   img.h = height;
   img.channels_in_file = channels;
@@ -30,7 +30,7 @@ static Image create_img(int width, int height, int channels) {
 }
 
 /* deconstructor that resets image. also to be called on main */
-void destroy_img(Image *img) {
+void destroy_img(image_t *img) {
   if (img == NULL) {
     return;
   }
@@ -43,7 +43,7 @@ void destroy_img(Image *img) {
 }
 
 /* writes n channel png */
-int write_img(const Image *img, const char *outpath) {
+int write_img(const image_t *img, const char *outpath) {
   if (!stbi_write_png(outpath, img->w, img->h, img->channels_in_file, img->data,
                       (img->w * img->channels_in_file))) {
     fprintf(stderr, "Image write failed\n");
@@ -52,7 +52,7 @@ int write_img(const Image *img, const char *outpath) {
   return 0;
 }
 
-int img_invert_rgba(Image *in_img) {
+int img_invert_rgba(image_t *in_img) {
   size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
 
   if (in_img->channels_in_file == 4) {
@@ -70,7 +70,7 @@ int img_invert_rgba(Image *in_img) {
   return 0;
 }
 
-int img_grayscale(Image *in_img) {
+int img_grayscale(image_t *in_img) {
   size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
   in_img->channels_in_file = 1;
 
@@ -83,7 +83,7 @@ int img_grayscale(Image *in_img) {
   return 0;
 }
 
-int img_binary(Image *in_img) {
+int img_binary(image_t *in_img) {
   img_grayscale(in_img);
   size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
 

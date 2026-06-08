@@ -3,8 +3,8 @@
 
 #include "point_opts.h"
 
-int conv_gaussian_blur(Image *image, float sigma);
+int conv_gaussian_blur(image_t *image, float sigma);
 
-int conv_sobel_x(Image *image);
-int conv_sobel_y(Image *image);
+int conv_sobel_x(image_t *image);
+int conv_sobel_y(image_t *image);
 #endif

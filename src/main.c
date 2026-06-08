@@ -13,9 +13,9 @@ typedef enum {
   ACTION_SOBELX,
   ACTION_SOBELY,
   ACTION_UNKNOWN,
-} ActionIdentifier;
+} action_identifier_t;
 
-static ActionIdentifier resolve_action(const char *action_string) {
+static action_identifier_t resolve_action(const char *action_string) {
   if (strcmp(action_string, "invert") == 0)
     return ACTION_INVERT;
   if (strcmp(action_string, "grayscale") == 0)
@@ -55,10 +55,10 @@ int main(int argc, char **argv) {
             "/*Image in path: %s\nImage out path: %s*/\n", actions.inpath,
             actions.outpath);
 
-  Image image = load_img(actions.inpath);
+  image_t image = load_img(actions.inpath);
 
   for (int i = 0; i < actions.action_count; i++) {
-    ActionIdentifier current_action = resolve_action(actions.actions[i]);
+    action_identifier_t current_action = resolve_action(actions.actions[i]);
 
     switch (current_action) {
     case ACTION_INVERT:

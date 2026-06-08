@@ -8,13 +8,13 @@ typedef struct {
   int w;
   int h;
   int channels_in_file;
-} Image;
+} image_t;
 
-Image load_img(const char *inpath);
-int img_invert_rgba(Image *in_img);
-int img_grayscale(Image *in_img);
-int img_binary(Image *in_img);
-int write_img(const Image *img, const char *outpath);
-void destroy_img(Image *img);
+image_t load_img(const char *inpath);
+int img_invert_rgba(image_t *in_img);
+int img_grayscale(image_t *in_img);
+int img_binary(image_t *in_img);
+int write_img(const image_t *img, const char *outpath);
+void destroy_img(image_t *img);
 
 #endif

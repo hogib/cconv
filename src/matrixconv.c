@@ -1,11 +1,9 @@
 #include "../include/matrixconv.h"
 #include <math.h>
 #include <stddef.h>
-#include <stdint.h>
-#include <stdlib.h>
 #include <string.h>
 
-uint8_t *clamp_farr(const float *f_arr, size_t arr_size) {
+uint8_t *clamp_float_arr(const float *f_arr, size_t arr_size) {
   uint8_t *clamped_arr = (uint8_t *)malloc(sizeof(uint8_t) * arr_size);
   if (clamped_arr == NULL)
     return NULL;
