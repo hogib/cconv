@@ -14,6 +14,7 @@ typedef enum {
   ACTION_SOBELX,
   ACTION_SOBELY,
   ACTION_SOBEL,
+  ACTION_LOG,
   ACTION_UNKNOWN,
 } action_identifier_t;
 
@@ -32,6 +33,8 @@ static action_identifier_t resolve_action(const char *action_string) {
     return ACTION_SOBELX;
   if (strcmp(action_string, "sobely") == 0)
     return ACTION_SOBELY;
+  if (strcmp(action_string, "log") == 0)
+    return ACTION_LOG;
 
   return ACTION_UNKNOWN;
 }
@@ -83,6 +86,7 @@ int main(int argc, char **argv) {
 
     case ACTION_SOBEL:
       conv_sobel_joint(&image);
+      img_binary_threshold(&image, 190u);
       break;
 
     case ACTION_SOBELX:
@@ -91,6 +95,11 @@ int main(int argc, char **argv) {
 
     case ACTION_SOBELY:
       conv_sobel_y(&image);
+      break;
+
+    case ACTION_LOG:
+      conv_LoG_rgba(&image, 0.70f);
+      img_contrast_stretch_g(&image);
       break;
 
     case ACTION_UNKNOWN:

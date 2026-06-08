@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* OPERATORS */
@@ -147,5 +148,38 @@ int conv_sobel_joint(image_t *image) {
   free(output_y);
   free(output_joint);
   free(output_clamped);
+  return 0;
+}
+
+int conv_LoG_rgba(image_t *image, float sigma) {
+  int k_size = 2 * ceil(3 * sigma) + 1;
+  size_t size = image->h * image->w * image->channels_in_file;
+
+  float *log_kernel = create_log_kernel(k_size, sigma);
+  if (log_kernel == NULL) {
+    free(log_kernel);
+    return -1;
+  }
+
+  float *output =
+      convolve_rgba(image->data, image->w, image->h, log_kernel, k_size);
+  if (output == NULL) {
+    free(output);
+    free(log_kernel);
+    return -1;
+  }
+
+  uint8_t *output_clamped = clamp_float_arr(output, size);
+  if (output_clamped == NULL) {
+    free(output);
+    free(output_clamped);
+    free(log_kernel);
+    return -1;
+  }
+
+  memcpy(image->data, output_clamped, size);
+  free(output);
+  free(output_clamped);
+  free(log_kernel);
   return 0;
 }

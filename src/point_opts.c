@@ -98,6 +98,19 @@ int img_binary(image_t *in_img) {
   return 0;
 }
 
+int img_binary_threshold(image_t *in_img, uint8_t threshold) {
+  size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
+
+  for (size_t i = 0; i < size_pixels; i++) {
+    if (in_img->data[i] > threshold) {
+      in_img->data[i] = 255u;
+    } else {
+      in_img->data[i] = 0u;
+    }
+  }
+  return 0;
+}
+
 int img_contrast_stretch_g(image_t *in_img) {
   size_t size_pixels = (size_t)in_img->w * (size_t)in_img->h;
   uint8_t r_min = 255u;
