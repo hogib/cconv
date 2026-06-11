@@ -112,9 +112,7 @@ int conv_sobel_y(image_t *image) {
 }
 
 int conv_sobel_joint(image_t *image) {
-  if (img_grayscale(image) != 0)
-    return -2;
-  size_t size = image->h * image->w;
+  size_t size = image->h * image->w * image->channels_in_file;
   float *output_x = convolve_separable_mono(image->data, image->w, image->h,
                                             sobel_x_h, sobel_x_v, 3);
   float *output_y = convolve_separable_mono(image->data, image->w, image->h,
