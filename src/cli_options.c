@@ -1,17 +1,7 @@
-#define _GNU_SOURCE
 #include "../include/cli_options.h"
-#include <getopt.h>
 #include <stdio.h>
-#include <unistd.h>
-
-static char *short_option = ":hi:o:e:v";
-static struct option long_options[] = {
-    {"help", no_argument, NULL, 'h'},
-    {"input", required_argument, NULL, 'i'},
-    {"output", required_argument, NULL, 'o'},
-    {"effect", required_argument, NULL, 'e'},
-    {"verbose", no_argument, NULL, 'v'},
-};
+#include <stdlib.h>
+#include <string.h>
 
 int help(void) {
   printf("Usage: cconv [OPTIONS]\n");
@@ -25,13 +15,44 @@ int help(void) {
   return 0;
 }
 
+static void parse_action_param(action_type_t type, const char *param_str,
+                               float *out_f, int *out_i) {
+  if (param_str == NULL || param_str[0] == '\0') {
+    *out_f = 0.0f;
+    *out_i = 0;
+    return;
+  }
+  switch (type) {
+  case ACTION_LOG:
+    *out_f = atof(param_str);
+    break;
+
+  case ACTION_BINARY:
+    *out_i = atoi(param_str);
+    break;
+
+  case ACTION_GAUSS:
+    *out_f = atof(param_str);
+    break;
+
+  default:
+    break;
+  }
+}
+
 int get_cli_actions(int argc, char *argv[], cli_action *cli) {
   int ch;
   opterr = 0;
-  cli->action_count = 0;
+  int option_index = 0;
 
-  while ((ch = getopt_long(argc, argv, short_option, long_options, NULL)) !=
-         -1) {
+  cli->action_count = 0;
+  cli->verbose = false;
+  cli->help_called = false;
+  cli->inpath = NULL;
+  cli->outpath = NULL;
+
+  while ((ch = getopt_long(argc, argv, ":hvi:o:gl:cbIxyseGt:", long_options,
+                           NULL)) != -1) {
 
     switch (ch) {
     case 'h':
@@ -47,23 +68,7 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
       cli->outpath = optarg;
       break;
 
-    case 'e':
-      if (cli->action_count < 15) {
-        cli->actions[cli->action_count++] = optarg;
-      } else {
-        fprintf(stderr, "Error: Maximum of 15 actions allowwed.\n");
-      }
-
-      while (optind < argc && argv[optind][0] != '-') {
-        if (cli->action_count < 15) {
-          cli->actions[cli->action_count++] = argv[optind];
-          optind++;
-        } else {
-          fprintf(stderr, "Error: Maximum of 15 actions allowed. \n");
-          return -1;
-        }
-      }
-      break;
+    case 'g':
 
     case 'v':
       cli->verbose = true;
