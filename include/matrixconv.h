@@ -17,5 +17,6 @@ float *convolve_rgba(const uint8_t *input, int width, int height,
 float *create_gaussian_kernel(int k_size, float sigma);
 
 uint8_t *clamp_float_arr(const float *f_arr, size_t arr_size);
+float *create_log_kernel(int k_size, float sigma);
 
 #endif

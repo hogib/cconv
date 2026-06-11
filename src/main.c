@@ -16,6 +16,7 @@ typedef enum {
   ACTION_SOBEL,
   ACTION_LOG,
   ACTION_CONTRAST,
+  ACTION_EQUALIZE,
   ACTION_UNKNOWN,
 } action_identifier_t;
 
@@ -36,6 +37,8 @@ static action_identifier_t resolve_action(const char *action_string) {
     return ACTION_SOBELY;
   if (strcmp(action_string, "contrast_stretch") == 0)
     return ACTION_CONTRAST;
+  if (strcmp(action_string, "equalize") == 0)
+    return ACTION_EQUALIZE;
   if (strcmp(action_string, "log") == 0)
     return ACTION_LOG;
 
@@ -85,6 +88,10 @@ int main(int argc, char **argv) {
 
     case ACTION_CONTRAST:
       img_contrast_stretch_g(&image);
+      break;
+
+    case ACTION_EQUALIZE:
+      img_histogram_eq_g(&image);
       break;
 
     case ACTION_GAUSS:

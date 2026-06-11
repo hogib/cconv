@@ -18,5 +18,5 @@ int write_img(const image_t *img, const char *outpath);
 void destroy_img(image_t *img);
 int img_contrast_stretch_g(image_t *in_img);
 int img_binary_threshold(image_t *in_img, uint8_t threshold);
-float *create_log_kernel(int k_size, float sigma);
+int img_histogram_eq_g(image_t *in_img);
 #endif

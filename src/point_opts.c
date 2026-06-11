@@ -141,3 +141,50 @@ int img_contrast_stretch_g(image_t *in_img) {
 
   return 0;
 }
+
+int img_histogram_eq_g(image_t *in_img) {
+  int size_pixels = in_img->w * in_img->h;
+  int hist[256] = {0};
+  int cdf[256] = {0};
+  int eq_map[256] = {0};
+
+  for (int i = 0; i < size_pixels; ++i) {
+    hist[in_img->data[i]]++;
+  }
+
+  cdf[0] = hist[0];
+  for (int i = 1; i < 256; ++i) {
+    // Formula for Cumulative Distribution Function
+    cdf[i] = cdf[i - 1] + hist[i];
+  }
+
+  int cdf_min = 0;
+  for (int i = 0; i < 256; i++) {
+    if (hist[i] > 0) {
+      cdf_min = cdf[i];
+      break;
+    }
+  }
+
+  for (int i = 0; i < 256; i++) {
+    if (cdf[i] == 0) {
+      eq_map[i] = 0;
+    } else {
+      // Formula: round( (cdf[i] - cdf_min) / (total_pixels - cdf_min) * 255 )
+      eq_map[i] =
+          (int)((float)(cdf[i] - cdf_min) / (size_pixels - cdf_min) * 255.0);
+
+      // Clamp mapping
+      if (eq_map[i] > 255)
+        eq_map[i] = 255;
+      if (eq_map[i] < 0)
+        eq_map[i] = 0;
+    }
+  }
+
+  for (int i = 0; i < size_pixels; ++i) {
+    in_img->data[i] = (uint8_t)eq_map[in_img->data[i]];
+  }
+
+  return 0;
+}
