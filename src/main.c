@@ -40,6 +40,9 @@ int main(int argc, char **argv) {
       break;
 
     case ACTION_THRESHOLD:
+      if (image.channels_in_file > 2) {
+        img_grayscale(&image);
+      }
       img_binary_threshold(&image, actions.param_i);
       break;
 
@@ -48,10 +51,16 @@ int main(int argc, char **argv) {
       break;
 
     case ACTION_CONTRAST:
+      if (image.channels_in_file > 2) {
+        img_grayscale(&image);
+      }
       img_contrast_stretch_g(&image);
       break;
 
     case ACTION_EQUALIZE:
+      if (image.channels_in_file > 2) {
+        img_grayscale(&image);
+      }
       img_histogram_eq_g(&image);
       break;
 
@@ -60,14 +69,23 @@ int main(int argc, char **argv) {
       break;
 
     case ACTION_SOBEL:
+      if (image.channels_in_file > 2) {
+        img_grayscale(&image);
+      }
       conv_sobel_joint(&image);
       break;
 
     case ACTION_SOBELX:
+      if (image.channels_in_file > 2) {
+        img_grayscale(&image);
+      }
       conv_sobel_x(&image);
       break;
 
     case ACTION_SOBELY:
+      if (image.channels_in_file > 2) {
+        img_grayscale(&image);
+      }
       conv_sobel_y(&image);
       break;
 
