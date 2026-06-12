@@ -65,7 +65,7 @@ int img_invert_rgba(image_t *in_img) {
     }
   } else {
     for (size_t i = 0; i < size_pixels; i++) {
-      in_img->data[i] = 255 - in_img->data[i];
+      in_img->data[i] = 255u - in_img->data[i];
     }
   }
   return 0;
