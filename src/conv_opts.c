@@ -1,6 +1,6 @@
 #include "../include/conv_opts.h"
 #include "../include/matrixconv.h"
-#include "point_opts.h"
+#include "../include/point_opts.h"
 #include <math.h>
 #include <stddef.h>
 #include <stdio.h>
