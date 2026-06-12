@@ -4,20 +4,31 @@ A simple, dependency-free CLI tool for image manipulation and convolution operat
 
 ## Features
 
-**Image Manipulation:**
-- **Invert** - Invert colors in an image
-- **Grayscale** - Convert image to grayscale
-- **Binary** - Convert image to binary (black and white)
+### Image Filtering
+- **Grayscale** - Convert to single-channel grayscale
+- **Invert** - Color inversion
+- **Binary Thresholding** - Convert to black and white with configurable threshold
+- **Contrast Stretching** - Histogram equalization for contrast enhancement
+- **Histogram Equalization** - Improve image contrast distribution
 
-**Convolution Operations:**
-- **Gaussian Blur** - Apply Gaussian blur with configurable sigma
-- **Sobel X** - Edge detection in X direction
-- **Sobel Y** - Edge detection in Y direction
+### Convolution Filters
+- **Gaussian Blur** - Configurable Gaussian blur (sigma parameter)
+- **Laplacian of Gaussian (LoG)** - Edge detection with configurable sigma
+- **Sobel X** - Horizontal edge detection
+- **Sobel Y** - Vertical edge detection
+- **Sobel (Combined)** - Gradient magnitude edge detection
 
-**Additional Features:**
-- Chain multiple effects sequentially
-- Simple command-line interface
-- No external dependencies (uses stb_image for image I/O)
-- Supports PNG output
-- Verbose debug logging option
+### Core Capabilities
+- Sequential filter chaining (apply multiple filters in order)
+- Configurable parameters for most filters (sigma, threshold values)
+- Verbose logging mode for debugging
+- PNG input/output support
 
+## Requirements
+
+- GCC or compatible C compiler (C99 or later)
+- Standard C library
+- POSIX-compliant system (Linux, macOS, BSD)
+
+## Usage
+- **cconv [OPTIONS] -i INPUT_FILE [-o OUTPUT_FILE]
