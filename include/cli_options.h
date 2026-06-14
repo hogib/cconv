@@ -39,13 +39,13 @@ typedef struct {
 static struct option long_options[] = {
     {"help", no_argument, 0, 'h'},
     {"input", required_argument, 0, 'i'},
-    {"output", required_argument, 0, 'o'},
+    {"output", optional_argument, 0, 'o'},
     {"verbose", no_argument, 0, 'v'},
 
     // Effects
 
     {"grayscale", no_argument, 0, 'g'},
-    {"log", required_argument, 0, 'l'},
+    {"log", optional_argument, 0, 'l'},
     {"contrast", no_argument, 0, 'c'},
     {"binary", no_argument, 0, 'b'},
     {"threshold", required_argument, 0, 't'},

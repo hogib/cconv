@@ -4,74 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-int help(void) {
-  printf("\n");
-  printf("USAGE:\n");
-  printf("  cconv [OPTIONS] -i INPUT_FILE [-o OUTPUT_FILE]\n\n");
-
-  printf("REQUIRED OPTIONS:\n");
-  printf("  -i, --input FILE          Input image file (PNG/JPG)\n\n");
-
-  printf("OUTPUT OPTIONS:\n");
-  printf("  -o, --output FILE         Output file path (default: out.png)\n\n");
-
-  printf("IMAGE FILTERS (apply sequentially):\n");
-  printf("  Basic Filters:\n");
-  printf("    -g, --grayscale         Convert image to grayscale\n");
-  printf("    -I, --invert            Invert image colors (negative)\n");
-  printf("    -c, --contrast          Apply contrast stretching (histogram equalization)\n");
-  printf("    -e, --equalize          Histogram equalization\n\n");
-
-  printf("  Threshold & Convolution:\n");
-  printf("    -b, --binary            Apply binary thresholding (B&W conversion)\n");
-  printf("    -t, --threshold VAL     Binary threshold value (0-255, default: 128)\n");
-  printf("    -l, --log SIGMA         Laplacian of Gaussian filter\n");
-  printf("                            (sigma: 0.1-10.0, default: 0.55)\n");
-  printf("    -G, --gauss [SIGMA]     Gaussian blur filter\n");
-  printf("                            (sigma: 0.1-10.0, default: 5.0)\n\n");
-
-  printf("  Edge Detection:\n");
-  printf("    -x, --sobelx            Sobel X edge detection (horizontal)\n");
-  printf("    -y, --sobely            Sobel Y edge detection (vertical)\n");
-  printf("    -s, --sobel             Sobel edge detection (combined X+Y)\n\n");
-
-  printf("OTHER OPTIONS:\n");
-  printf("  -v, --verbose             Enable verbose output (debug messages)\n");
-  printf("  -h, --help                Display this help message\n\n");
-
-  printf("EXAMPLES:\n");
-  printf("  # Basic grayscale conversion\n");
-  printf("  cconv -i photo.jpg -o result.png -g\n\n");
-
-  printf("  # Multiple filters (applied sequentially)\n");
-  printf("  cconv -i photo.jpg -o result.png -g -c -b\n\n");
-
-  printf("  # Combined short options\n");
-  printf("  cconv -i photo.jpg -o result.png -gcI\n\n");
-
-  printf("  # LoG filter with custom sigma\n");
-  printf("  cconv -i photo.jpg -o result.png -l 2.5\n\n");
-
-  printf("  # Edge detection with custom threshold\n");
-  printf("  cconv -i photo.jpg -o result.png -x -t 100\n\n");
-
-  printf("  # Verbose mode with multiple filters\n");
-  printf("  cconv -i photo.jpg -o result.png -v -g -l 1.5 -s\n\n");
-
-  printf("FILTER ORDER MATTERS:\n");
-  printf("  Filters are applied in the order specified on command line.\n");
-  printf("  Example: cconv -i in.jpg -o out.png -g -l 1.5 -c\n");
-  printf("  This applies: grayscale → LoG → contrast\n\n");
-
-  printf("NOTES:\n");
-  printf("  • Optional arguments can be combined: -gIc is same as -g -I -c\n");
-  printf("  • Parametered options must be last in combined form: use -gl 1.5 not -l1.5g\n");
-  printf("  • If no -o specified, output defaults to 'out.png'\n");
-  printf("  • Use -v flag for detailed processing information\n\n");
-
-  return 0;
-}
-
 int get_cli_actions(int argc, char *argv[], cli_action *cli) {
   int ch;
   opterr = 0;
@@ -82,7 +14,7 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
   cli->inpath = NULL;
   cli->outpath = NULL;
 
-  while ((ch = getopt_long(argc, argv, ":hvi:o:gl:cbIxyseG::t:", long_options,
+  while ((ch = getopt_long(argc, argv, ":hvi:o::gl::cbIxyseG::t:", long_options,
                            NULL)) != -1) {
 
     switch (ch) {
@@ -188,5 +120,78 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
       return -1;
     }
   }
+  return 0;
+}
+
+int help(void) {
+  printf("\n");
+  printf("USAGE:\n");
+  printf("  cconv [OPTIONS] -i INPUT_FILE [-o OUTPUT_FILE]\n\n");
+
+  printf("REQUIRED OPTIONS:\n");
+  printf("  -i, --input FILE          Input image file (PNG/JPG)\n\n");
+
+  printf("OUTPUT OPTIONS:\n");
+  printf("  -o, --output FILE         Output file path (default: out.png)\n\n");
+
+  printf("IMAGE FILTERS (apply sequentially):\n");
+  printf("  Basic Filters:\n");
+  printf("    -g, --grayscale         Convert image to grayscale\n");
+  printf("    -I, --invert            Invert image colors (negative)\n");
+  printf("    -c, --contrast          Apply contrast stretching (histogram "
+         "equalization)\n");
+  printf("    -e, --equalize          Histogram equalization\n\n");
+
+  printf("  Threshold & Convolution:\n");
+  printf("    -b, --binary            Apply binary thresholding (B&W "
+         "conversion)\n");
+  printf("    -t, --threshold VAL     Binary threshold value (0-255, default: "
+         "128)\n");
+  printf("    -l, --log SIGMA         Laplacian of Gaussian filter\n");
+  printf("                            (sigma: 0.1-10.0, default: 0.55)\n");
+  printf("    -G, --gauss [SIGMA]     Gaussian blur filter\n");
+  printf("                            (sigma: 0.1-10.0, default: 5.0)\n\n");
+
+  printf("  Edge Detection:\n");
+  printf("    -x, --sobelx            Sobel X edge detection (horizontal)\n");
+  printf("    -y, --sobely            Sobel Y edge detection (vertical)\n");
+  printf("    -s, --sobel             Sobel edge detection (combined X+Y)\n\n");
+
+  printf("OTHER OPTIONS:\n");
+  printf(
+      "  -v, --verbose             Enable verbose output (debug messages)\n");
+  printf("  -h, --help                Display this help message\n\n");
+
+  printf("EXAMPLES:\n");
+  printf("  # Basic grayscale conversion\n");
+  printf("  cconv -i photo.jpg -o result.png -g\n\n");
+
+  printf("  # Multiple filters (applied sequentially)\n");
+  printf("  cconv -i photo.jpg -o result.png -g -c -b\n\n");
+
+  printf("  # Combined short options\n");
+  printf("  cconv -i photo.jpg -o result.png -gcI\n\n");
+
+  printf("  # LoG filter with custom sigma\n");
+  printf("  cconv -i photo.jpg -o result.png -l 2.5\n\n");
+
+  printf("  # Edge detection with custom threshold\n");
+  printf("  cconv -i photo.jpg -o result.png -x -t 100\n\n");
+
+  printf("  # Verbose mode with multiple filters\n");
+  printf("  cconv -i photo.jpg -o result.png -v -g -l 1.5 -s\n\n");
+
+  printf("FILTER ORDER MATTERS:\n");
+  printf("  Filters are applied in the order specified on command line.\n");
+  printf("  Example: cconv -i in.jpg -o out.png -g -l 1.5 -c\n");
+  printf("  This applies: grayscale → LoG → contrast\n\n");
+
+  printf("NOTES:\n");
+  printf("  • Optional arguments can be combined: -gIc is same as -g -I -c\n");
+  printf("  • Parametered options must be last in combined form: use -gl 1.5 "
+         "not -l1.5g\n");
+  printf("  • If no -o specified, output defaults to 'out.png'\n");
+  printf("  • Use -v flag for detailed processing information\n\n");
+
   return 0;
 }

@@ -22,6 +22,10 @@ int main(int argc, char **argv) {
     return -1;
   }
 
+  if (cli.outpath == NULL) {
+    cli.outpath = "out.png";
+  }
+
   debug_msg(cli.verbose, "INFO", "/*Image in path: %s\nImage out path: %s*/\n",
             cli.inpath, cli.outpath);
 
