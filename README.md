@@ -31,4 +31,4 @@ A simple, dependency-free CLI tool for image manipulation and convolution operat
 - POSIX-compliant system (Linux, macOS, BSD)
 
 ## Usage
-- **cconv [OPTIONS] -i INPUT_FILE [-o OUTPUT_FILE]
+- cconv [OPTIONS] -i INPUT_FILE [-o OUTPUT_FILE]

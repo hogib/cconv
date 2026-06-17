@@ -82,7 +82,7 @@ int get_cli_actions(int argc, char *argv[], cli_action *cli) {
   cli->inpath = NULL;
   cli->outpath = NULL;
 
-  while ((ch = getopt_long(argc, argv, ":hvi:o:gl:cbIxyseG::t:", long_options,
+  while ((ch = getopt_long(argc, argv, ":hvi:o::gl::cbIxyseG::t:", long_options,
                            NULL)) != -1) {
 
     switch (ch) {
