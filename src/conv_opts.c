@@ -19,7 +19,7 @@ static const float box_3_v[3] = {1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f};
 
 int conv_gaussian_blur(image_t *image, float sigma) {
   int k_size = (int)sigma * 6 + 1;
-  const float *kernel = create_gaussian_kernel(k_size, sigma);
+  float *kernel = create_gaussian_kernel(k_size, sigma);
   size_t size = image->h * image->w * image->channels_in_file;
 
   if (image->channels_in_file == 4) {
@@ -30,6 +30,7 @@ int conv_gaussian_blur(image_t *image, float sigma) {
     if (output == NULL || output_clamped == NULL) {
       free(output_clamped);
       free(output);
+      free(kernel);
       return -1;
     }
 
@@ -37,6 +38,7 @@ int conv_gaussian_blur(image_t *image, float sigma) {
 
     free(output_clamped);
     free(output);
+    free(kernel);
 
     return 0;
   } else if (image->channels_in_file == 2) {
@@ -47,6 +49,7 @@ int conv_gaussian_blur(image_t *image, float sigma) {
     if (output == NULL || output_clamped == NULL) {
       free(output_clamped);
       free(output);
+      free(kernel);
       return -1;
     }
 
@@ -54,6 +57,7 @@ int conv_gaussian_blur(image_t *image, float sigma) {
 
     free(output_clamped);
     free(output);
+    free(kernel);
 
     return 0;
   } else {
